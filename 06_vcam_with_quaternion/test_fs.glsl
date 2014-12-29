@@ -1,4 +1,4 @@
-#version 410
+#version 330
 
 in float dist;
 out vec4 frag_colour;
