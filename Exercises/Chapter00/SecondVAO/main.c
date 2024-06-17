@@ -22,7 +22,7 @@ int main() {
   const GLubyte* renderer;
   const GLubyte* version;
   GLuint vao1, vao2;
-  GLuint vbo;
+  GLuint vbo1, vbo2;
   FILE* fsfptr, *vsfptr;
   const int READ_SIZE = 500;
 
@@ -30,7 +30,7 @@ int main() {
   vsfptr = fopen("test.vert", "r");
 
   /* geometry to use. these are 3 xyz points (9 floats total) to make a triangle */
-  GLfloat points[] = { -0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f, 
+  GLfloat points[18] = { -0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f, 
                         0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f,  0.5f, 0.0f};
 
   /* these are the strings of code for the shaders
@@ -102,9 +102,14 @@ int main() {
 
   /* a vertex buffer object (VBO) is created here. this stores an array of
   data on the graphics adapter's memory. in our case - the vertex points */
-  glGenBuffers(1, &vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, 18 * sizeof(GLfloat), points, GL_STATIC_DRAW);
+  glGenBuffers(1, &vbo1);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo1);
+  glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), points, GL_STATIC_DRAW);
+
+  /* Second vbo for other half of vertex array. */
+  glGenBuffers(1, &vbo2);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo2);
+  glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), &points[9], GL_STATIC_DRAW);
 
   /* the vertex array object (VAO) is a little descriptor that defines which
   data from vertex buffer objects should be used as input variables to vertex
@@ -116,7 +121,7 @@ int main() {
   glEnableVertexAttribArray(0);
   /* this VBO is already bound, but it's a good habit to explicitly specify which
   VBO's data the following vertex attribute pointer refers to */
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo1);
   /* "attribute #0 is created from every 3 variables in the above buffer, of type
   float (i.e. make me vec3s)" */
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
@@ -125,7 +130,7 @@ int main() {
   glGenVertexArrays(1, &vao2);
   glBindVertexArray(vao2);
   glEnableVertexAttribArray(1);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo2);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
   /* here we copy the shader strings into GL shaders, and compile them. we
@@ -157,11 +162,11 @@ int main() {
     glUseProgram(shader_programme);
     glBindVertexArray(vao1);
     /* draw points 0-3 from the currently bound VAO with current in-use shader */
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 
     /* Second VAO */
     glBindVertexArray(vao2);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLES, 1, 3);
 
     /* update other events like input handling */
     glfwPollEvents();
