@@ -30,8 +30,8 @@ int main() {
   vsfptr = fopen("test.vert", "r");
 
   /* geometry to use. these are 3 xyz points (9 floats total) to make a triangle */
-  GLfloat points[18] = { -0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f, 
-                        0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f,  0.5f, 0.0f};
+  GLfloat points0[9] = {-0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
+  GLfloat points1[9] = {0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, 0.5f, 0.0f};
 
   /* these are the strings of code for the shaders
   the vertex shader positions each vertex point */
@@ -104,12 +104,12 @@ int main() {
   data on the graphics adapter's memory. in our case - the vertex points */
   glGenBuffers(1, &vbo1);
   glBindBuffer(GL_ARRAY_BUFFER, vbo1);
-  glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), points, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), points0, GL_STATIC_DRAW);
 
   /* Second vbo for other half of vertex array. */
   glGenBuffers(1, &vbo2);
   glBindBuffer(GL_ARRAY_BUFFER, vbo2);
-  glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), &points[9], GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), points1, GL_STATIC_DRAW);
 
   /* the vertex array object (VAO) is a little descriptor that defines which
   data from vertex buffer objects should be used as input variables to vertex
@@ -125,13 +125,15 @@ int main() {
   /* "attribute #0 is created from every 3 variables in the above buffer, of type
   float (i.e. make me vec3s)" */
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+  //glDisableVertexAttribArray(0);
 
   /* Second VAO */
   glGenVertexArrays(1, &vao2);
   glBindVertexArray(vao2);
   glEnableVertexAttribArray(1);
   glBindBuffer(GL_ARRAY_BUFFER, vbo2);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+  //glDisableVertexAttribArray(1);
 
   /* here we copy the shader strings into GL shaders, and compile them. we
   then create an executable shader 'program' and attach both of the compiled
@@ -166,7 +168,7 @@ int main() {
 
     /* Second VAO */
     glBindVertexArray(vao2);
-    glDrawArrays(GL_TRIANGLES, 1, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 
     /* update other events like input handling */
     glfwPollEvents();
