@@ -17,6 +17,13 @@
 #include <GLFW/glfw3.h> /* GLFW helper library */
 #include <stdio.h>
 
+const char* shaderfns[] = {
+  "test1.frag",
+  "test1.vert",
+  "test2.frag",
+  "test2.vert"
+};
+
 struct fileptr {
   FILE* fsfptr, *vsfptr;
 } sdrfileptrs[2];
@@ -29,8 +36,10 @@ int main() {
   GLuint vbo1, vbo2;
   const int READ_SIZE = 500;
 
-  sdrfileptrs[0].fsfptr = fopen("test1.frag", "r");
-  sdrfileptrs[0].vsfptr = fopen("test1.vert", "r");
+  sdrfileptrs[0].fsfptr = fopen(shaderfns[0], "r");
+  sdrfileptrs[0].vsfptr = fopen(shaderfns[1], "r");
+  sdrfileptrs[1].fsfptr = fopen(shaderfns[2], "r");
+  sdrfileptrs[1].vsfptr = fopen(shaderfns[3], "r");
 
   /* geometry to use. these are 3 xyz points (9 floats total) to make a triangle */
   GLfloat points0[9] = {-0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
@@ -52,6 +61,8 @@ int main() {
 
   fclose(sdrfileptrs[0].fsfptr);
   fclose(sdrfileptrs[0].vsfptr);
+  fclose(sdrfileptrs[1].fsfptr);
+  fclose(sdrfileptrs[1].vsfptr);
 
   /* fragment_shader[READ_SIZE - 1] = 0;
   vertex_shader[READ_SIZE - 1] = 0; */
