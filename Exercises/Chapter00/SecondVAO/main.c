@@ -17,17 +17,20 @@
 #include <GLFW/glfw3.h> /* GLFW helper library */
 #include <stdio.h>
 
+struct fileptr {
+  FILE* fsfptr, *vsfptr;
+} sdrfileptrs[2];
+
 int main() {
   GLFWwindow* window = NULL;
   const GLubyte* renderer;
   const GLubyte* version;
   GLuint vao1, vao2;
   GLuint vbo1, vbo2;
-  FILE* fsfptr, *vsfptr;
   const int READ_SIZE = 500;
 
-  fsfptr = fopen("test.frag", "r");
-  vsfptr = fopen("test.vert", "r");
+  sdrfileptrs[0].fsfptr = fopen("test1.frag", "r");
+  sdrfileptrs[0].vsfptr = fopen("test1.vert", "r");
 
   /* geometry to use. these are 3 xyz points (9 floats total) to make a triangle */
   GLfloat points0[9] = {-0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
@@ -41,14 +44,14 @@ int main() {
   triangle) */
   char fragment_shader[READ_SIZE];
 
-  while(!feof(fsfptr))
-    fread(fragment_shader, READ_SIZE, 1, fsfptr);
+  while(!feof(sdrfileptrs[0].fsfptr))
+    fread(fragment_shader, READ_SIZE, 1, sdrfileptrs[0].fsfptr);
 
-  while(!feof(vsfptr))
-    fread(vertex_shader, READ_SIZE, 1, vsfptr);
+  while(!feof(sdrfileptrs[0].vsfptr))
+    fread(vertex_shader, READ_SIZE, 1, sdrfileptrs[0].vsfptr);
 
-  fclose(fsfptr);
-  fclose(vsfptr);
+  fclose(sdrfileptrs[0].fsfptr);
+  fclose(sdrfileptrs[0].vsfptr);
 
   /* fragment_shader[READ_SIZE - 1] = 0;
   vertex_shader[READ_SIZE - 1] = 0; */
