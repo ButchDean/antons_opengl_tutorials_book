@@ -45,12 +45,7 @@ int main() {
   GLfloat points0[9] = {-0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
   GLfloat points1[9] = {0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, 0.5f, 0.0f};
 
-  /* these are the strings of code for the shaders
-  the vertex shader positions each vertex point */
   char vertex_shader[READ_SIZE];
-
-  /* the fragment shader colours each fragment (pixel-sized area of the
-  triangle) */
   char fragment_shader[READ_SIZE];
 
   while(!feof(sdrfileptrs[0].fsfptr))
@@ -64,14 +59,11 @@ int main() {
   fclose(sdrfileptrs[1].fsfptr);
   fclose(sdrfileptrs[1].vsfptr);
 
-  /* fragment_shader[READ_SIZE - 1] = 0;
-  vertex_shader[READ_SIZE - 1] = 0; */
+  const char* pvertex_shader1 = vertex_shader;
+  const char* pfragment_shader1 = fragment_shader;
 
-  const char* pvertex_shader = vertex_shader;
-  const char* pfragment_shader = fragment_shader;
-
-  printf("%s", pfragment_shader);
-  printf("%s", pvertex_shader);
+  printf("%s", pfragment_shader1);
+  printf("%s", pvertex_shader1);
 
   /* GL shader objects for vertex and fragment shader [components] */
   GLuint vert_shader, frag_shader;
@@ -99,7 +91,6 @@ int main() {
 
   glewExperimental = GL_TRUE;
   glewInit();
-
 
   renderer = glGetString(GL_RENDERER); /* get renderer string */
   version  = glGetString(GL_VERSION);  /* version as a string */
@@ -131,11 +122,12 @@ int main() {
   glBindBuffer(GL_ARRAY_BUFFER, vbo2);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
+  /* First vertex shader */
   vert_shader = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vert_shader, 1, &pvertex_shader, NULL);
+  glShaderSource(vert_shader, 1, &pvertex_shader1, NULL);
   glCompileShader(vert_shader);
   frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(frag_shader, 1, &pfragment_shader, NULL);
+  glShaderSource(frag_shader, 1, &pfragment_shader1, NULL);
   glCompileShader(frag_shader);
   shader_programme = glCreateProgram();
   glAttachShader(shader_programme, frag_shader);
