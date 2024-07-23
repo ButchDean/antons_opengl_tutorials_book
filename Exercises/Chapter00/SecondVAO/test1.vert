@@ -1,7 +1,7 @@
 #version 410
 
-in vec3 vp;
+layout(location = 0) in vec3 lower_triangle_vertices;
 
 void main () {
-    gl_Position = vec4(vp, 1.0);
+    gl_Position = vec4(lower_triangle_vertices, 1.0);
 }

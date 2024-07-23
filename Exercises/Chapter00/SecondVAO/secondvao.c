@@ -1,20 +1,5 @@
-/******************************************************************************\
-| OpenGL 4 Example Code.                                                       |
-| Accompanies written series "Anton's OpenGL 4 Tutorials"                      |
-| Email: anton at antongerdelan dot net                                        |
-| First version 27 Jan 2014                                                    |
-| Dr Anton Gerdelan, Trinity College Dublin, Ireland.                          |
-| See individual libraries for separate legal notices                          |
-|******************************************************************************|
-| "Hello Triangle". Just the basics.                                           |
-| If you're on Apple un-comment the version number code at the beginning. It   |
-| will give you the latest, even if you say 3.2!                               |
-| This uses the libraries GLEW and GLFW3 to start GL. Download and compile     |
-| these first. Linking them might be a pain, but you'll need to master this.   |
-\******************************************************************************/
-
-#include <GL/glew.h>    /* include GLEW and new version of GL on Windows */
-#include <GLFW/glfw3.h> /* GLFW helper library */
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include <stdio.h>
 
 const char* shaderfns[] = {
@@ -41,7 +26,7 @@ int main() {
   sdrfileptrs[1].fsfptr = fopen(shaderfns[2], "r");
   sdrfileptrs[1].vsfptr = fopen(shaderfns[3], "r");
 
-  /* geometry to use. these are 3 xyz points (9 floats total) to make a triangle */
+  /* Geometry for each triangle making up the quad. */
   GLfloat points0[9] = {-0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
   GLfloat points1[9] = {0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, 0.5f, 0.0f};
 
@@ -109,18 +94,19 @@ int main() {
   glBindBuffer(GL_ARRAY_BUFFER, vbo2);
   glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), points1, GL_STATIC_DRAW);
 
+  /* First VAO */
   glGenVertexArrays(1, &vao1);
   glBindVertexArray(vao1);
-  glEnableVertexAttribArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, vbo1);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+  glEnableVertexAttribArray(0);
 
   /* Second VAO */
   glGenVertexArrays(1, &vao2);
   glBindVertexArray(vao2);
-  glEnableVertexAttribArray(1);
   glBindBuffer(GL_ARRAY_BUFFER, vbo2);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+  glEnableVertexAttribArray(1);
 
   /* First vertex shader */
   vert_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -142,8 +128,8 @@ int main() {
     glBindVertexArray(vao1);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
-    glBindVertexArray(vao2);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    //glBindVertexArray(vao2);
+    //glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glfwPollEvents();
     glfwSwapBuffers(window);
