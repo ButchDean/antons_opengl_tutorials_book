@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
+#include <string.h>
 
 const char* shaderfns[] = {
   "test1.frag",
@@ -30,25 +31,30 @@ int main() {
   GLfloat points0[9] = {-0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
   GLfloat points1[9] = {0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, 0.5f, 0.0f};
 
-  char vertex_shader[READ_SIZE];
-  char fragment_shader[READ_SIZE];
+  char vertex_shader[2][READ_SIZE];
+  char fragment_shader[2][READ_SIZE];
+
+  for(int i = 0; i < 2; i++) {
+    memset(vertex_shader[i], '\0', READ_SIZE);
+    memset(fragment_shader[i], '\0', READ_SIZE);
+  }
 
   while(!feof(sdrfileptrs[0].fsfptr))
-    fread(fragment_shader, READ_SIZE, 1, sdrfileptrs[0].fsfptr);
+    fread(fragment_shader[0], READ_SIZE, 1, sdrfileptrs[0].fsfptr);
 
   while(!feof(sdrfileptrs[0].vsfptr))
-    fread(vertex_shader, READ_SIZE, 1, sdrfileptrs[0].vsfptr);
+    fread(vertex_shader[0], READ_SIZE, 1, sdrfileptrs[0].vsfptr);
 
   fclose(sdrfileptrs[0].fsfptr);
   fclose(sdrfileptrs[0].vsfptr);
   fclose(sdrfileptrs[1].fsfptr);
   fclose(sdrfileptrs[1].vsfptr);
 
-  const char* pvertex_shader1 = vertex_shader;
-  const char* pfragment_shader1 = fragment_shader;
+  const char* pvertex_shader = vertex_shader[0];
+  const char* pfragment_shader = fragment_shader[0];
 
-  printf("%s", pfragment_shader1);
-  printf("%s", pvertex_shader1);
+  printf("%s", pfragment_shader);
+  printf("%s", pvertex_shader);
 
   GLuint vert_shader[2], frag_shader[2];
   GLuint shader_programme[2];
@@ -108,10 +114,10 @@ int main() {
 
   /* First vertex shader */
   vert_shader[0] = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vert_shader[0], 1, &pvertex_shader1, NULL);
+  glShaderSource(vert_shader[0], 1, &pvertex_shader, NULL);
   glCompileShader(vert_shader[0]);
   frag_shader[0] = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(frag_shader[0], 1, &pfragment_shader1, NULL);
+  glShaderSource(frag_shader[0], 1, &pfragment_shader, NULL);
   glCompileShader(frag_shader[0]);
   shader_programme[0] = glCreateProgram();
   glAttachShader(shader_programme[0], frag_shader[0]);
