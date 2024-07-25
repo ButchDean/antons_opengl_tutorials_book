@@ -50,10 +50,8 @@ int main() {
   printf("%s", pfragment_shader1);
   printf("%s", pvertex_shader1);
 
-  /* GL shader objects for vertex and fragment shader [components] */
-  GLuint vert_shader, frag_shader;
-  /* GL shader programme object [combined, to link] */
-  GLuint shader_programme;
+  GLuint vert_shader[2], frag_shader[2];
+  GLuint shader_programme[2];
 
   /* start GL context and O/S window using the GLFW helper library */
   if (!glfwInit()) {
@@ -109,22 +107,33 @@ int main() {
   glEnableVertexAttribArray(1);
 
   /* First vertex shader */
-  vert_shader = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vert_shader, 1, &pvertex_shader1, NULL);
-  glCompileShader(vert_shader);
-  frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(frag_shader, 1, &pfragment_shader1, NULL);
-  glCompileShader(frag_shader);
-  shader_programme = glCreateProgram();
-  glAttachShader(shader_programme, frag_shader);
-  glAttachShader(shader_programme, vert_shader);
-  glLinkProgram(shader_programme);
+  vert_shader[0] = glCreateShader(GL_VERTEX_SHADER);
+  glShaderSource(vert_shader[0], 1, &pvertex_shader1, NULL);
+  glCompileShader(vert_shader[0]);
+  frag_shader[0] = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(frag_shader[0], 1, &pfragment_shader1, NULL);
+  glCompileShader(frag_shader[0]);
+  shader_programme[0] = glCreateProgram();
+  glAttachShader(shader_programme[0], frag_shader[0]);
+  glAttachShader(shader_programme[0], vert_shader[0]);
+  glLinkProgram(shader_programme[0]);
+
+   /* Second vertex shader */
+/*  vert_shader[1] = glCreateShader(GL_VERTEX_SHADER);
+  glShaderSource(vert_shader[1], 1, &pvertex_shader1, NULL);
+  glCompileShader(vert_shader[1]);
+  frag_shader[1] = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(frag_shader[1], 1, &pfragment_shader1, NULL);
+  glCompileShader(frag_shader[1]);
+  shader_programme[1] = glCreateProgram();
+  glAttachShader(shader_programme[1], frag_shader[1]);
+  glAttachShader(shader_programme[1], vert_shader[1]);
+  glLinkProgram(shader_programme[1]); */
 
   while (!glfwWindowShouldClose(window)) {
-    
     glClearColor(0.6f, 0.6f, 0.8f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glUseProgram(shader_programme);
+    glUseProgram(shader_programme[0]);
     glBindVertexArray(vao1);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
