@@ -45,16 +45,26 @@ int main() {
   while(!feof(sdrfileptrs[0].vsfptr))
     fread(vertex_shader[0], READ_SIZE, 1, sdrfileptrs[0].vsfptr);
 
+  while(!feof(sdrfileptrs[1].fsfptr))
+    fread(fragment_shader[1], READ_SIZE, 1, sdrfileptrs[1].fsfptr);
+
+  while(!feof(sdrfileptrs[1].vsfptr))
+    fread(vertex_shader[1], READ_SIZE, 1, sdrfileptrs[1].vsfptr);    
+
   fclose(sdrfileptrs[0].fsfptr);
   fclose(sdrfileptrs[0].vsfptr);
   fclose(sdrfileptrs[1].fsfptr);
   fclose(sdrfileptrs[1].vsfptr);
 
-  const char* pvertex_shader = vertex_shader[0];
-  const char* pfragment_shader = fragment_shader[0];
+  const char* pvertex_shader0 = vertex_shader[0];
+  const char* pfragment_shader0 = fragment_shader[0];
+  const char* pvertex_shader1 = vertex_shader[1];
+  const char* pfragment_shader1 = fragment_shader[1];
 
-  printf("%s", pfragment_shader);
-  printf("%s", pvertex_shader);
+  printf("--\n%s\n--\n", pfragment_shader0);
+  printf("--\n%s\n--\n", pvertex_shader0);
+  printf("--\n%s\n--\n", pfragment_shader1);
+  printf("--\n%s\n--\n", pvertex_shader1);
 
   GLuint vert_shader[2], frag_shader[2];
   GLuint shader_programme[2];
@@ -114,10 +124,10 @@ int main() {
 
   /* First vertex shader */
   vert_shader[0] = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vert_shader[0], 1, &pvertex_shader, NULL);
+  glShaderSource(vert_shader[0], 1, &pvertex_shader0, NULL);
   glCompileShader(vert_shader[0]);
   frag_shader[0] = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(frag_shader[0], 1, &pfragment_shader, NULL);
+  glShaderSource(frag_shader[0], 1, &pfragment_shader0, NULL);
   glCompileShader(frag_shader[0]);
   shader_programme[0] = glCreateProgram();
   glAttachShader(shader_programme[0], frag_shader[0]);
